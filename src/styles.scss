@@ -1,0 +1,148 @@
+/* =========================================================
+   Fluxo — Design system (tokens globais)
+   ========================================================= */
+
+:root {
+  color-scheme: dark;
+
+  /* Superfícies */
+  --bg: #0B0B10;
+  --surface: #14141B;
+  --surface2: #1C1C26;
+  --border: #23232D;
+
+  /* Texto */
+  --text: #F4F4F7;
+  --muted: #A1A1AD;
+
+  /* Entradas */
+  --in: #34D399;
+  --in-soft: rgba(52, 211, 153, .12);
+
+  /* Gastos */
+  --out: #FB7185;
+  --out-soft: rgba(251, 113, 133, .12);
+
+  /* Guardado / ação principal */
+  --accent: #6D4AFF;
+  --accent-soft: rgba(109, 74, 255, .16);
+  --accent-text: #B4A2FF;
+
+  /* Tipografia */
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --num: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+
+  /* Raios */
+  --r-card: 24px;
+  --r-section: 28px;
+  --r-btn: 12px;
+  --r-btn-lg: 14px;
+  --r-chip: 99px;
+
+  /* Categorias */
+  --cat-moradia: #8B7CF6;
+  --cat-alimentacao: #F97316;
+  --cat-compras: #3B82F6;
+  --cat-lazer: #EC4899;
+  --cat-saude: #A3E635;
+  --cat-transporte: #38BDF8;
+  --cat-assinaturas: #14B8A6;
+  --cat-outros: #94A3B8;
+  --cat-entrada: #34D399;
+  --cat-guardado: #B4A2FF;
+}
+
+/* =========================================================
+   Reset / base
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  font-feature-settings: 'tnum' 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--num);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: clamp(26px, 3vw, 34px);
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+/* Utilitários */
+.num {
+  font-family: var(--num);
+  font-feature-settings: 'tnum' 1;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

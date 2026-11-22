@@ -1,0 +1,74 @@
+<div class="shell" [class.recolhida]="recolhida()">
+  <aside class="sidebar">
+    <a class="logo" routerLink="/dashboard" aria-label="Fluxo — ir para o Dashboard">
+      <span class="logo__marca" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 15c3 0 3-6 6-6s3 6 6 6 3-6 6-6" />
+        </svg>
+      </span>
+      <span class="logo__texto">Fluxo</span>
+    </a>
+
+    @if (!telaPequena()) {
+      <button
+        type="button"
+        class="recolher"
+        (click)="alternar()"
+        [attr.aria-label]="recolhida() ? 'Expandir menu' : 'Recolher menu'"
+        [attr.aria-expanded]="!recolhida()"
+      >
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+      </button>
+    }
+
+    <nav class="nav" aria-label="Navegação principal">
+      @for (link of links; track link.rota) {
+        <a
+          class="nav__link"
+          [routerLink]="link.rota"
+          routerLinkActive="ativo"
+          ariaCurrentWhenActive="page"
+          [attr.title]="recolhida() ? link.label : null"
+        >
+          <svg class="nav__icone" viewBox="0 0 24 24" width="20" height="20" fill="none"
+               stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+               stroke-linejoin="round" aria-hidden="true">
+            @switch (link.icone) {
+              @case ('dashboard') {
+                <rect x="3" y="3" width="7" height="9" rx="2" />
+                <rect x="14" y="3" width="7" height="5" rx="2" />
+                <rect x="14" y="12" width="7" height="9" rx="2" />
+                <rect x="3" y="16" width="7" height="5" rx="2" />
+              }
+              @case ('transacoes') {
+                <path d="M7 4v16" />
+                <path d="m3 8 4-4 4 4" />
+                <path d="M17 20V4" />
+                <path d="m21 16-4 4-4-4" />
+              }
+              @case ('guardado') {
+                <path d="M19 9.5c0-3-3.1-5.5-7-5.5S5 6.5 5 9.5c0 1.4.6 2.6 1.6 3.6L6 18h3l.7-2h4.6l.7 2h3l-.6-4.9c1-1 1.6-2.2 1.6-3.6Z" />
+                <path d="M9.5 8h5" />
+                <path d="M19 9.5h1.5" />
+              }
+            }
+          </svg>
+          <span class="nav__label">{{ link.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="usuario" [attr.title]="recolhida() ? usuario.nome : null">
+      <span class="avatar" aria-hidden="true">{{ inicial }}</span>
+      <span class="usuario__nome">{{ usuario.nome }}</span>
+    </div>
+  </aside>
+
+  <main class="conteudo">
+    <router-outlet />
+  </main>
+</div>
