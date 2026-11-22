@@ -2,6 +2,7 @@ import { Component, computed, inject, input, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 
 import { BarChart, BarraItem } from '../../components/bar-chart/bar-chart';
+import { Fab } from '../../components/fab/fab';
 import { MoedaPipe } from '../../components/pipes/moeda.pipe';
 import { StatCard } from '../../components/stat-card/stat-card';
 import { TransacaoModal } from '../../components/transacao-modal/transacao-modal';
@@ -27,7 +28,7 @@ interface EstadoModal {
 
 @Component({
   selector: 'app-guardado',
-  imports: [MoedaPipe, StatCard, BarChart, TransactionItem, TransacaoModal],
+  imports: [MoedaPipe, StatCard, BarChart, TransactionItem, TransacaoModal, Fab],
   templateUrl: './guardado.html',
   styleUrl: './guardado.scss',
 })

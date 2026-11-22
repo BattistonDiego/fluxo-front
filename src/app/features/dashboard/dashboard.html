@@ -65,6 +65,7 @@
         icone="seta-baixo"
         [valor]="dados()?.entradas"
         [carregando]="!dados()"
+        layoutMobile="linha"
       />
       <app-stat-card
         label="Gastos"
@@ -72,6 +73,7 @@
         icone="seta-cima"
         [valor]="dados()?.gastos"
         [carregando]="!dados()"
+        layoutMobile="linha"
       />
       <app-stat-card
         label="Guardado no mês"
@@ -79,6 +81,7 @@
         icone="cofrinho"
         [valor]="dados()?.guardado"
         [carregando]="!dados()"
+        layoutMobile="linha"
       />
     </div>
 
@@ -120,3 +123,10 @@
     </section>
   }
 </div>
+
+<!-- Mobile: a ação principal fica no FAB e abre o modal aqui mesmo -->
+<button app-fab aria-label="Adicionar transação" (click)="abrirModal()"></button>
+
+@if (modalAberto()) {
+  <app-transacao-modal (salvo)="fecharModal()" (excluido)="fecharModal()" (fechado)="fecharModal()" />
+}

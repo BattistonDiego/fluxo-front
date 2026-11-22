@@ -1,0 +1,29 @@
+@use '../../../styles/breakpoints' as bp;
+
+:host {
+  display: none;
+}
+
+@include bp.mobile {
+  :host {
+    position: fixed;
+    right: 20px;
+    bottom: calc(106px + env(safe-area-inset-bottom));
+    z-index: 30;
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    border: 0;
+    border-radius: 20px;
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(109, 74, 255, 0.45);
+    transition: filter 0.15s ease;
+
+    &:active {
+      filter: brightness(1.1);
+    }
+  }
+}

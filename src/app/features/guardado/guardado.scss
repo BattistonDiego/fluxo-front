@@ -1,3 +1,5 @@
+@use '../../../styles/breakpoints' as bp;
+
 :host {
   display: block;
 }
@@ -64,14 +66,9 @@
     border-radius: 16px;
   }
 
-  @media (max-width: 600px) {
-    &__valor {
-      font-size: 56px;
-    }
-
-    &__skeleton {
-      height: 56px;
-    }
+  // Linha "Novembro: 300,00 €" — só no mobile, no lugar do stat-card.
+  &__mes {
+    display: none;
   }
 }
 
@@ -90,10 +87,6 @@
     font-size: 18px;
     font-weight: 600;
     letter-spacing: 0;
-  }
-
-  @media (max-width: 600px) {
-    padding: 24px;
   }
 }
 
@@ -169,5 +162,97 @@
   &__valor {
     width: 80px;
     height: 16px;
+  }
+}
+
+// ───────────── Mobile ─────────────
+
+@include bp.mobile {
+  .pagina {
+    gap: 28px;
+  }
+
+  // Header: só o título (a ação vai para o FAB).
+  .cabecalho .btn-primario {
+    display: none;
+  }
+
+  .topo {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    app-stat-card {
+      display: none;
+    }
+  }
+
+  .total {
+    &__label {
+      font-size: 14px;
+    }
+
+    &__valor {
+      margin-top: 6px;
+      font-size: 54px;
+    }
+
+    &__skeleton {
+      width: 260px;
+      height: 54px;
+      margin: 6px auto 0;
+    }
+
+    &__mes {
+      display: block;
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--muted);
+
+      strong {
+        font-weight: 600;
+        color: var(--accent-text);
+      }
+    }
+
+    &__mes-skeleton {
+      display: inline-block;
+      width: 72px;
+      height: 14px;
+      vertical-align: middle;
+    }
+  }
+
+  .secao {
+    gap: 22px;
+    padding: 24px 16px 12px;
+    border-radius: var(--r-card);
+
+    &__titulo {
+      font-size: 16px;
+    }
+  }
+
+  .registros {
+    padding-top: 16px;
+
+    &__cabecalho {
+      padding: 0 4px 8px;
+    }
+
+    &__titulo {
+      font-size: 15px;
+    }
+  }
+
+  .linha-skeleton {
+    gap: 12px;
+    padding: 10px 4px;
+
+    &__icone {
+      flex-basis: 40px;
+      height: 40px;
+      border-radius: 12px;
+    }
   }
 }

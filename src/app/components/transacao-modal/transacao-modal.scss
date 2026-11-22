@@ -9,10 +9,6 @@
   overflow-y: auto;
   background: rgba(5, 5, 10, 0.7);
   animation: aparecer 0.15s ease-out;
-
-  @media (max-width: 600px) {
-    padding-top: 24px;
-  }
 }
 
 .caixa {
@@ -29,10 +25,11 @@
   &--compacta {
     width: min(440px, 100%);
   }
+}
 
-  @media (max-width: 600px) {
-    padding: 24px 20px;
-  }
+// Alça do bottom sheet (só no mobile)
+.alca {
+  display: none;
 }
 
 @keyframes aparecer {
@@ -47,10 +44,9 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .overlay,
-  .caixa {
-    animation: none;
+@keyframes subir-sheet {
+  from {
+    transform: translateY(100%);
   }
 }
 

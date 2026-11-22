@@ -7,6 +7,8 @@
     aria-modal="true"
     [attr.aria-labelledby]="ids.titulo"
   >
+    <span class="alca" aria-hidden="true"></span>
+
     <header class="cabecalho">
       <h2 class="titulo" [id]="ids.titulo">{{ titulo() }}</h2>
       <button type="button" class="fechar" aria-label="Fechar" (click)="fechar()">
@@ -54,7 +56,7 @@
       </div>
 
       @if (tipo() !== 'GUARDADO') {
-        <div class="campo">
+        <div class="campo campo--categoria">
           <span class="rotulo" [id]="ids.categoria">Categoria</span>
           <div class="chips" role="group" [attr.aria-labelledby]="ids.categoria">
             @for (c of categoriasDoTipo(); track c.id) {
@@ -116,7 +118,7 @@
             (click)="excluir()"
             (blur)="confirmandoExclusao.set(false)"
           >
-            {{ confirmandoExclusao() ? 'Confirmar exclusão' : 'Excluir' }}
+            {{ confirmandoExclusao() ? 'Confirmar exclusão' : rotuloExcluir() }}
           </button>
         }
         <span class="espaco"></span>

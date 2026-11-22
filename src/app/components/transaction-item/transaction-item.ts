@@ -19,6 +19,7 @@ import { MoedaPipe } from '../pipes/moeda.pipe';
     type: 'button',
     '[attr.aria-label]': `'Editar ' + transacao().descricao`,
     '[style.--cor]': 'visual().cor',
+    '[class.compacto]': 'compacto()',
   },
 })
 export class TransactionItem {
@@ -29,6 +30,8 @@ export class TransactionItem {
   readonly subtitulo = input<'categoria' | 'data'>('categoria');
   /** false: valor sem sinal e na cor do texto (ex.: tela Guardado). */
   readonly mostrarSinal = input(true);
+  /** Variação mais enxuta no mobile (tela Guardado). Sem efeito no desktop. */
+  readonly compacto = input(false);
 
   protected readonly visual = computed(() => {
     const t = this.transacao();

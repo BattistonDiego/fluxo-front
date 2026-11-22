@@ -1,3 +1,5 @@
+@use '../../../styles/breakpoints' as bp;
+
 :host {
   display: block;
 }
@@ -181,5 +183,71 @@
   &__valor {
     width: 80px;
     height: 16px;
+  }
+}
+
+// ───────────── Mobile ─────────────
+
+@include bp.mobile {
+  .pagina {
+    gap: 20px;
+    // O layout dá 20px de padding lateral; aqui a tela usa 16px.
+    margin-inline: -4px;
+  }
+
+  // Header: só o título (a ação vai para o FAB).
+  .topo .btn-primario {
+    display: none;
+  }
+
+  .titulo {
+    padding: 8px 4px 0;
+  }
+
+  .filtros {
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .campo {
+    height: 46px;
+  }
+
+  .busca {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0 14px;
+  }
+
+  .mes {
+    flex: none;
+
+    &__select {
+      padding: 0 30px 0 12px;
+      font-size: 14px;
+    }
+
+    &__seta {
+      right: 10px;
+    }
+  }
+
+  .grupo__cabecalho {
+    padding: 4px 8px 6px;
+  }
+
+  .carregando {
+    padding-top: 24px;
+  }
+
+  .linha-skeleton {
+    gap: 14px;
+    padding: 10px 8px;
+
+    &__icone {
+      flex-basis: 42px;
+      height: 42px;
+      border-radius: 13px;
+    }
   }
 }

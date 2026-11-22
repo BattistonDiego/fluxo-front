@@ -7,7 +7,6 @@ import {
   ElementRef,
   inject,
   input,
-  OnInit,
   output,
   signal,
   untracked,
@@ -24,6 +23,7 @@ import {
 } from '@angular/forms';
 import { map } from 'rxjs';
 
+import { BreakpointService } from '../../core/layout/breakpoint.service';
 import { hojeIso } from '../../core/utils/data';
 import { parseValor, valorParaTexto } from '../../core/utils/valor';
 import { NovaTransacao, TipoTransacao, Transacao } from '../../interface/transacao.interface';
@@ -63,15 +63,16 @@ let sequencia = 0;
   selector: 'app-transacao-modal',
   imports: [ReactiveFormsModule, CategoryIcon],
   templateUrl: './transacao-modal.html',
-  styleUrl: './transacao-modal.scss',
+  styleUrls: ['./transacao-modal.scss', './transacao-modal.sheet.scss'],
   host: {
     '(document:keydown)': 'aoTeclar($event)',
   },
 })
-export class TransacaoModal implements OnInit {
+export class TransacaoModal {
   private readonly transacaoService = inject(TransacaoService);
   private readonly categoriaService = inject(CategoriaService);
   private readonly document = inject(DOCUMENT);
+  private readonly breakpoint = inject(BreakpointService);
 
   /** Transação a editar. Sem ela, o modal cria uma nova. */
   readonly transacao = input<Transacao | null>(null);
@@ -134,6 +135,11 @@ export class TransacaoModal implements OnInit {
 
   protected readonly editando = computed(() => !!this.transacao());
 
+  /** No mobile (bottom sheet) o botão fica sozinho embaixo e ganha um rótulo mais explícito. */
+  protected readonly rotuloExcluir = computed(() =>
+    this.breakpoint.mobile() && !this.apenasGuardado() ? 'Excluir transação' : 'Excluir',
+  );
+
   protected readonly titulo = computed(() => {
     if (this.tipo() === 'GUARDADO') return this.editando() ? 'Editar guardado' : 'Guardar dinheiro';
     return this.editando() ? 'Editar transação' : 'Nova transação';
@@ -160,6 +166,15 @@ export class TransacaoModal implements OnInit {
 
     afterNextRender(() => this.campoValor().nativeElement.focus());
 
+    // (Re)inicializa o form sempre que os inputs mudam — inclusive se o pai trocar
+    // a transação com o modal já aberto.
+    effect(() => {
+      const t = this.transacao();
+      const permitidos = this.tiposPermitidos();
+      const inicial = this.tipoInicial();
+      untracked(() => this.inicializarForm(t, permitidos, inicial));
+    });
+
     // Categorias chegam de forma assíncrona: pré-seleciona quando carregarem.
     effect(() => {
       this.categorias();
@@ -167,11 +182,12 @@ export class TransacaoModal implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    const t = this.transacao();
-    const permitidos = this.tiposPermitidos();
-    const tipo =
-      t?.tipo ?? (permitidos.includes(this.tipoInicial()) ? this.tipoInicial() : permitidos[0]);
+  private inicializarForm(
+    t: Transacao | null,
+    permitidos: TipoTransacao[],
+    tipoInicial: TipoTransacao,
+  ): void {
+    const tipo = t?.tipo ?? (permitidos.includes(tipoInicial) ? tipoInicial : permitidos[0]);
 
     this.form.setValue({
       tipo,
@@ -180,6 +196,8 @@ export class TransacaoModal implements OnInit {
       data: t?.data ?? hojeIso(),
       descricao: t?.descricao ?? '',
     });
+    this.confirmandoExclusao.set(false);
+    this.erro.set(null);
     this.aplicarRegrasDoTipo(tipo);
     this.preSelecionarCategoria();
   }

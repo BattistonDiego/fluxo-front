@@ -45,6 +45,11 @@ export function nomeDoMesSemAno(mes: string): string {
   return capitalizar(formatadorMes.format(new Date(ano, m - 1, 1)));
 }
 
+/** Mês abreviado com ano. Ex: '2026-11' → 'Nov 2026'. */
+export function nomeDoMesCurto(mes: string): string {
+  return `${abreviacaoDoMes(mes)} ${mes.slice(0, 4)}`;
+}
+
 /** Mês abreviado. Ex: '2026-11' → 'Nov'. */
 export function abreviacaoDoMes(mes: string): string {
   const [ano, m] = mes.split('-').map(Number);

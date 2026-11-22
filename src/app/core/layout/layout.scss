@@ -1,3 +1,5 @@
+@use '../../../styles/breakpoints' as bp;
+
 :host {
   display: block;
 }
@@ -166,4 +168,54 @@
   flex: 1;
   min-width: 0;
   padding: 40px clamp(16px, 4vw, 64px);
+}
+
+// ───────────── Barra inferior (mobile) ─────────────
+
+.tabbar {
+  display: none;
+}
+
+@include bp.mobile {
+  .sidebar {
+    display: none;
+  }
+
+  .conteudo {
+    // Espaço para a barra inferior (86px) + FAB, para nada ficar escondido atrás deles.
+    padding: 24px 20px calc(190px + env(safe-area-inset-bottom));
+  }
+
+  .tabbar {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: calc(86px + env(safe-area-inset-bottom));
+    padding: 0 16px calc(16px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .tabbar__link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 88px;
+    padding: 6px 0;
+    border-radius: var(--r-btn);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+
+    &.ativo {
+      color: var(--accent-text);
+      font-weight: 600;
+    }
+  }
 }

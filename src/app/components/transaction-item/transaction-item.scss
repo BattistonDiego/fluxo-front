@@ -1,3 +1,5 @@
+@use '../../../styles/breakpoints' as bp;
+
 :host {
   display: flex;
   align-items: center;
@@ -67,5 +69,48 @@
 
   &[data-tipo='GUARDADO'] {
     color: var(--accent-text);
+  }
+}
+
+// ───────────── Mobile ─────────────
+
+@include bp.mobile {
+  :host {
+    gap: 14px;
+    padding: 10px 8px;
+    border-radius: 14px;
+  }
+
+  .icone {
+    --tamanho-icone: 19px;
+
+    flex-basis: 42px;
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+  }
+
+  .subtitulo {
+    margin-top: 2px;
+    font-size: 12px;
+  }
+
+  .valor {
+    font-size: 15px;
+  }
+
+  // Tela Guardado
+  :host(.compacto) {
+    gap: 12px;
+    padding: 10px 4px;
+
+    .icone {
+      --tamanho-icone: 18px;
+
+      flex-basis: 40px;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+    }
   }
 }

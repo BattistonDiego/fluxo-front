@@ -12,12 +12,11 @@ export interface BarraItem {
   valor: number;
 }
 
-/** Altura máxima da barra (px); o restante dos 240px fica para valor e rótulo. */
-const ALTURA_MAXIMA = 170;
-const ALTURA_MINIMA = 8;
-
-/** Alturas dos placeholders enquanto carrega. */
-const ALTURAS_SKELETON = [90, 130, 70, 150, 110, 120];
+/**
+ * Altura de cada barra como fração (0–1) do maior valor.
+ * A altura em px sai do CSS (--altura-max: 170px no desktop, 120px no mobile; mínimo 8px).
+ */
+const FRACOES_SKELETON = [0.53, 0.76, 0.41, 0.88, 0.65, 0.7];
 
 const formatadorInteiro = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 });
 const formatadorDecimal = new Intl.NumberFormat('pt-BR', {
@@ -26,10 +25,10 @@ const formatadorDecimal = new Intl.NumberFormat('pt-BR', {
 });
 const moeda = new MoedaPipe();
 
-/** "300 €" quando inteiro, "46,32 €" caso contrário. */
+/** "300" quando inteiro, "46,32" caso contrário (o "€" fica num span à parte). */
 function valorCompacto(valor: number): string {
   const formatador = Number.isInteger(valor) ? formatadorInteiro : formatadorDecimal;
-  return `${formatador.format(valor)} €`;
+  return formatador.format(valor);
 }
 
 /** Gráfico de barras verticais em HTML/CSS; cada barra é um botão selecionável. */
@@ -48,14 +47,14 @@ export class BarChart {
 
   readonly selecionar = output<string>();
 
-  protected readonly alturasSkeleton = ALTURAS_SKELETON;
+  protected readonly fracoesSkeleton = FRACOES_SKELETON;
 
   protected readonly barras = computed(() => {
     const itens = this.itens();
     const maior = Math.max(0, ...itens.map((i) => i.valor));
     return itens.map((item) => ({
       ...item,
-      altura: maior > 0 ? Math.max((item.valor / maior) * ALTURA_MAXIMA, ALTURA_MINIMA) : ALTURA_MINIMA,
+      fracao: maior > 0 ? item.valor / maior : 0,
       valorFormatado: valorCompacto(item.valor),
       ariaLabel: `${item.rotuloCompleto}: ${moeda.transform(item.valor)}`,
     }));

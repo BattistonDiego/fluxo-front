@@ -3,11 +3,13 @@ import { rxResource, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
+import { Fab } from '../../components/fab/fab';
 import { MoedaPipe } from '../../components/pipes/moeda.pipe';
 import { TransacaoModal } from '../../components/transacao-modal/transacao-modal';
 import { TransactionItem } from '../../components/transaction-item/transaction-item';
+import { BreakpointService } from '../../core/layout/breakpoint.service';
 import { hojeIso, rotuloDoDia } from '../../core/utils/data';
-import { nomeDoMes } from '../../core/utils/mes';
+import { nomeDoMes, nomeDoMesCurto } from '../../core/utils/mes';
 import { valorEstavel } from '../../core/utils/resource';
 import { injetarSeletorMes } from '../../core/utils/seletor-mes';
 import { normalizarTexto } from '../../core/utils/texto';
@@ -32,7 +34,7 @@ const BUSCA_DEBOUNCE_MS = 200;
 
 @Component({
   selector: 'app-transacoes',
-  imports: [MoedaPipe, TransactionItem, TransacaoModal],
+  imports: [MoedaPipe, TransactionItem, TransacaoModal, Fab],
   templateUrl: './transacoes.html',
   styleUrl: './transacoes.scss',
 })
@@ -48,6 +50,10 @@ export class Transacoes {
 
   protected readonly seletor = injetarSeletorMes(this.mes);
   protected readonly nomeDoMes = nomeDoMes;
+  protected readonly nomeDoMesCurto = nomeDoMesCurto;
+
+  /** No mobile os rótulos ficam curtos ("Nov 2026", "Sexta, 20 nov", "Buscar"). */
+  protected readonly mobile = inject(BreakpointService).mobile;
 
   private readonly categorias = toSignal(this.categoriaService.listar(), {
     initialValue: [] as Categoria[],
@@ -83,6 +89,7 @@ export class Transacoes {
   protected readonly grupos = computed<GrupoDia[]>(() => {
     const termo = this.termo();
     const categorias = this.categoriasPorId();
+    const curto = this.mobile();
     const filtradas = (this.transacoes() ?? []).filter((t) => {
       if (!termo) return true;
       const categoria =
@@ -101,7 +108,7 @@ export class Transacoes {
 
     return [...porDia.entries()].map(([data, itens]) => ({
       data,
-      rotulo: rotuloDoDia(data, this.hoje),
+      rotulo: rotuloDoDia(data, this.hoje, curto),
       total:
         Math.round(
           itens.reduce((acc, t) => acc + (t.tipo === 'ENTRADA' ? t.valor : -t.valor), 0) * 100,

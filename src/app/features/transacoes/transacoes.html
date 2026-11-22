@@ -22,7 +22,7 @@
       <input
         class="busca__input"
         type="search"
-        placeholder="Buscar transação"
+        [placeholder]="mobile() ? 'Buscar' : 'Buscar transação'"
         autocomplete="off"
         [value]="busca()"
         (input)="aoBuscar($event)"
@@ -33,7 +33,7 @@
       <span class="sr-only">Mês</span>
       <select class="mes__select" (change)="aoMudarMes($event)">
         @for (m of seletor.opcoes(); track m) {
-          <option [value]="m" [selected]="m === seletor.selecionado()">{{ nomeDoMes(m) }}</option>
+          <option [value]="m" [selected]="m === seletor.selecionado()">{{ mobile() ? nomeDoMesCurto(m) : nomeDoMes(m) }}</option>
         }
       </select>
       <svg class="mes__seta" viewBox="0 0 24 24" width="16" height="16" fill="none"
@@ -85,6 +85,9 @@
     </div>
   }
 </div>
+
+<!-- Mobile: substitui o botão do header -->
+<button app-fab aria-label="Adicionar transação" (click)="abrirNovo()"></button>
 
 @if (modal(); as m) {
   <app-transacao-modal

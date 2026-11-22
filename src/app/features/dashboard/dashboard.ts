@@ -1,11 +1,13 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 
 import { DonutChart, FatiaDonut } from '../../components/donut-chart/donut-chart';
+import { Fab } from '../../components/fab/fab';
 import { MoedaPipe } from '../../components/pipes/moeda.pipe';
 import { StatCard } from '../../components/stat-card/stat-card';
+import { TransacaoModal } from '../../components/transacao-modal/transacao-modal';
 import { nomeDoMes } from '../../core/utils/mes';
 import { valorEstavel } from '../../core/utils/resource';
 import { injetarSeletorMes } from '../../core/utils/seletor-mes';
@@ -13,7 +15,7 @@ import { TransacaoService } from '../../service/transacao.service';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [RouterLink, DecimalPipe, MoedaPipe, StatCard, DonutChart],
+  imports: [RouterLink, DecimalPipe, MoedaPipe, StatCard, DonutChart, Fab, TransacaoModal],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -57,4 +59,17 @@ export class Dashboard {
   );
 
   protected readonly placeholdersLegenda = [1, 2, 3, 4, 5];
+
+  // ───────────── Modal (aberto pelo FAB no mobile) ─────────────
+
+  protected readonly modalAberto = signal(false);
+
+  protected abrirModal(): void {
+    this.modalAberto.set(true);
+  }
+
+  /** O resumo recarrega sozinho via `versao` do service. */
+  protected fecharModal(): void {
+    this.modalAberto.set(false);
+  }
 }

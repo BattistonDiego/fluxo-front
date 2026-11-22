@@ -27,6 +27,15 @@
         } @else {
           <span class="total__skeleton skeleton"></span>
         }
+        <!-- Mobile: substitui o stat-card -->
+        <p class="total__mes">
+          {{ nomeMesSemAno() }}:
+          @if (totalDoMes() !== undefined) {
+            <strong>{{ totalDoMes() | moeda }}</strong>
+          } @else {
+            <span class="total__mes-skeleton skeleton"></span>
+          }
+        </p>
       </section>
 
       <app-stat-card
@@ -63,6 +72,7 @@
               app-transaction-item
               subtitulo="data"
               [mostrarSinal]="false"
+              [compacto]="true"
               [transacao]="t"
               (click)="abrirEdicao(t)"
             ></button>
@@ -87,6 +97,9 @@
     </section>
   }
 </div>
+
+<!-- Mobile: substitui o botão do header -->
+<button app-fab aria-label="Guardar dinheiro" (click)="abrirNovo()"></button>
 
 @if (modal(); as m) {
   <app-transacao-modal

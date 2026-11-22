@@ -10,20 +10,18 @@
       <span class="logo__texto">Fluxo</span>
     </a>
 
-    @if (!telaPequena()) {
-      <button
-        type="button"
-        class="recolher"
-        (click)="alternar()"
-        [attr.aria-label]="recolhida() ? 'Expandir menu' : 'Recolher menu'"
-        [attr.aria-expanded]="!recolhida()"
-      >
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
-             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="m15 18-6-6 6-6" />
-        </svg>
-      </button>
-    }
+    <button
+      type="button"
+      class="recolher"
+      (click)="alternar()"
+      [attr.aria-label]="recolhida() ? 'Expandir menu' : 'Recolher menu'"
+      [attr.aria-expanded]="!recolhida()"
+    >
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="m15 18-6-6 6-6" />
+      </svg>
+    </button>
 
     <nav class="nav" aria-label="Navegação principal">
       @for (link of links; track link.rota) {
@@ -71,4 +69,38 @@
   <main class="conteudo">
     <router-outlet />
   </main>
+
+  <!-- Barra de navegação inferior (só no mobile; a sidebar some) -->
+  <nav class="tabbar" aria-label="Navegação principal">
+    @for (link of links; track link.rota) {
+      <a
+        class="tabbar__link"
+        [routerLink]="link.rota"
+        routerLinkActive="ativo"
+        ariaCurrentWhenActive="page"
+      >
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
+             stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          @switch (link.icone) {
+            @case ('dashboard') {
+              <path d="M4 11l8-7 8 7v9H4z" />
+              <path d="M10 20v-5h4v5" />
+            }
+            @case ('transacoes') {
+              <path d="M7 4v16" />
+              <path d="m3 8 4-4 4 4" />
+              <path d="M17 20V4" />
+              <path d="m21 16-4 4-4-4" />
+            }
+            @case ('guardado') {
+              <path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5z" />
+              <path d="M2 9v1c0 1.1.9 2 2 2h1" />
+              <path d="M16 11h.01" />
+            }
+          }
+        </svg>
+        <span>{{ link.labelMobile }}</span>
+      </a>
+    }
+  </nav>
 </div>

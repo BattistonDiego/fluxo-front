@@ -1,0 +1,9 @@
+// Breakpoint único do app: abaixo de 768px é "mobile".
+// Manter em sincronia com MQ_MOBILE (core/layout/breakpoint.service.ts).
+$mobile-max: 767.98px;
+
+@mixin mobile {
+  @media (max-width: $mobile-max) {
+    @content;
+  }
+}

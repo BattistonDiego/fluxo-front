@@ -1,3 +1,5 @@
+@use '../../../styles/breakpoints' as bp;
+
 :host {
   display: block;
 }
@@ -80,16 +82,6 @@
     margin-top: 10px;
     border-radius: 16px;
   }
-
-  @media (max-width: 600px) {
-    &__valor {
-      font-size: 56px;
-    }
-
-    &__skeleton {
-      height: 56px;
-    }
-  }
 }
 
 // ───────────── 3. Cards ─────────────
@@ -123,10 +115,6 @@
     align-items: center;
     justify-content: center;
     gap: 56px;
-  }
-
-  @media (max-width: 600px) {
-    padding: 24px;
   }
 }
 
@@ -190,4 +178,113 @@
   padding: 48px 0;
   color: var(--muted);
   text-align: center;
+}
+
+// ───────────── Mobile ─────────────
+
+@include bp.mobile {
+  .dashboard {
+    gap: 32px;
+  }
+
+  // Header: só a navegação de mês, ocupando a largura (a ação vai para o FAB).
+  .topo .btn-primario {
+    display: none;
+  }
+
+  .mes {
+    flex: 1;
+    justify-content: space-between;
+
+    &__btn {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--r-btn-lg);
+    }
+
+    &__titulo {
+      min-width: 0;
+      font-size: 20px;
+    }
+  }
+
+  .saldo {
+    text-align: center;
+
+    &__label {
+      font-size: 14px;
+    }
+
+    &__valor {
+      margin-top: 6px;
+      font-size: 54px;
+    }
+
+    &__skeleton {
+      width: 240px;
+      height: 54px;
+      margin: 6px auto 0;
+    }
+  }
+
+  // Os 3 stat-cards viram um único card com 3 linhas.
+  .cards {
+    flex-direction: column;
+    gap: 0;
+    padding: 6px 20px;
+    border-radius: var(--r-card);
+    background: var(--surface);
+  }
+
+  .categorias {
+    gap: 22px;
+    padding: 24px 20px;
+    border-radius: var(--r-card);
+
+    &__titulo {
+      font-size: 16px;
+    }
+
+    &__corpo {
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      gap: 24px;
+    }
+  }
+
+  app-donut-chart,
+  .donut-skeleton {
+    align-self: center;
+  }
+
+  .donut-skeleton {
+    flex-basis: 210px;
+    width: 210px;
+    height: 210px;
+    border-width: 23.1px; // stroke 22 no viewBox 200 → 23.1px em 210px
+  }
+
+  .legenda {
+    flex: none;
+
+    &__item {
+      gap: 12px;
+      padding: 9px 0;
+    }
+
+    &__nome {
+      font-size: 14px;
+    }
+
+    &__pct {
+      width: 44px;
+      font-size: 13px;
+    }
+
+    &__valor {
+      width: 92px;
+      font-size: 14px;
+    }
+  }
 }

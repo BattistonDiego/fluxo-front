@@ -2,6 +2,7 @@
 
 const formatadorDiaSemana = new Intl.DateTimeFormat('pt-BR', { weekday: 'long' });
 const formatadorMes = new Intl.DateTimeFormat('pt-BR', { month: 'long' });
+const formatadorMesCurto = new Intl.DateTimeFormat('pt-BR', { month: 'short' });
 
 function paraIso(d: Date): string {
   const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -34,13 +35,22 @@ export function formatarDataCurta(iso: string): string {
 /**
  * Rótulo amigável de um dia: "Hoje", "Ontem" ou "Sexta, 20 de novembro"
  * (com o ano no final quando não for o ano corrente).
+ * Com `curto`: "Sexta, 20 nov".
  */
-export function rotuloDoDia(iso: string, hoje = hojeIso()): string {
+export function rotuloDoDia(iso: string, hoje = hojeIso(), curto = false): string {
   if (iso === hoje) return 'Hoje';
   if (iso === somarDias(hoje, -1)) return 'Ontem';
 
   const d = paraDate(iso);
   const semana = formatadorDiaSemana.format(d).split('-')[0];
-  const rotulo = `${semana.charAt(0).toUpperCase()}${semana.slice(1)}, ${d.getDate()} de ${formatadorMes.format(d)}`;
-  return iso.slice(0, 4) === hoje.slice(0, 4) ? rotulo : `${rotulo} de ${d.getFullYear()}`;
+  const diaSemana = `${semana.charAt(0).toUpperCase()}${semana.slice(1)}`;
+  const outroAno = iso.slice(0, 4) !== hoje.slice(0, 4);
+
+  if (curto) {
+    const mes = formatadorMesCurto.format(d).replace('.', '');
+    return `${diaSemana}, ${d.getDate()} ${mes}${outroAno ? ` ${d.getFullYear()}` : ''}`;
+  }
+
+  const rotulo = `${diaSemana}, ${d.getDate()} de ${formatadorMes.format(d)}`;
+  return outroAno ? `${rotulo} de ${d.getFullYear()}` : rotulo;
 }

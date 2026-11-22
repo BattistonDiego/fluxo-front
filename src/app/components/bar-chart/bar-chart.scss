@@ -1,8 +1,12 @@
+@use '../../../styles/breakpoints' as bp;
+
 :host {
   display: block;
 }
 
 .grafico {
+  --altura-max: 170px;
+
   display: flex;
   align-items: flex-end;
   gap: 16px;
@@ -41,6 +45,7 @@ div.coluna {
   display: block;
   width: 100%;
   max-width: 88px;
+  height: max(8px, calc(var(--fracao, 0) * var(--altura-max)));
   border-radius: 14px;
   background: #2a2540;
   transition: height 0.3s ease, background-color 0.2s ease;
@@ -67,13 +72,30 @@ button.coluna:hover:not(.selecionada) .barra {
   }
 }
 
-@media (max-width: 600px) {
+@include bp.mobile {
   .grafico {
+    --altura-max: 120px;
+
     gap: 8px;
+    height: 180px;
   }
 
-  .valor {
+  div.coluna {
+    padding-bottom: 28px;
+  }
+
+  .barra {
+    border-radius: 10px;
+  }
+
+  .valor,
+  .rotulo {
     font-size: 12px;
+  }
+
+  // Sem espaço para o "€" em 6 colunas estreitas (o aria-label mantém o valor completo).
+  .valor__moeda {
+    display: none;
   }
 }
 

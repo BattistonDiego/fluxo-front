@@ -38,7 +38,16 @@ const ICONES: Record<string, string> = {
     :host {
       display: inline-flex;
     }
+
+    /* O pai pode trocar o tamanho via CSS (ex.: no mobile) definindo --tamanho-icone. */
+    svg {
+      width: var(--tamanho-icone, var(--_tamanho));
+      height: var(--tamanho-icone, var(--_tamanho));
+    }
   `,
+  host: {
+    '[style.--_tamanho]': `tamanho() + 'px'`,
+  },
 })
 export class CategoryIcon {
   /** Nome do ícone (house, cart, bus, game, repeat, heart, bag, dots, briefcase, laptop, piggy). */
