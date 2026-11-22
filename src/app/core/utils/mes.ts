@@ -3,6 +3,7 @@
 const REGEX_MES = /^\d{4}-(0[1-9]|1[0-2])$/;
 
 const formatadorMes = new Intl.DateTimeFormat('pt-BR', { month: 'long' });
+const formatadorMesCurto = new Intl.DateTimeFormat('pt-BR', { month: 'short' });
 
 function formatar(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
@@ -35,7 +36,21 @@ export function mesesEntre(inicio: string, fim: string): string[] {
 
 /** Nome do mês por extenso. Ex: '2026-11' → 'Novembro 2026'. */
 export function nomeDoMes(mes: string): string {
+  return `${nomeDoMesSemAno(mes)} ${mes.slice(0, 4)}`;
+}
+
+/** Nome do mês sem o ano. Ex: '2026-11' → 'Novembro'. */
+export function nomeDoMesSemAno(mes: string): string {
   const [ano, m] = mes.split('-').map(Number);
-  const nome = formatadorMes.format(new Date(ano, m - 1, 1));
-  return `${nome.charAt(0).toUpperCase()}${nome.slice(1)} ${ano}`;
+  return capitalizar(formatadorMes.format(new Date(ano, m - 1, 1)));
+}
+
+/** Mês abreviado. Ex: '2026-11' → 'Nov'. */
+export function abreviacaoDoMes(mes: string): string {
+  const [ano, m] = mes.split('-').map(Number);
+  return capitalizar(formatadorMesCurto.format(new Date(ano, m - 1, 1)).replace('.', ''));
+}
+
+function capitalizar(texto: string): string {
+  return `${texto.charAt(0).toUpperCase()}${texto.slice(1)}`;
 }

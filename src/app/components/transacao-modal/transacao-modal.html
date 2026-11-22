@@ -2,6 +2,7 @@
   <div
     #caixa
     class="caixa"
+    [class.caixa--compacta]="apenasGuardado()"
     role="dialog"
     aria-modal="true"
     [attr.aria-labelledby]="ids.titulo"
@@ -81,7 +82,7 @@
         </div>
       }
 
-      <div class="linha">
+      <div class="linha" [class.linha--empilhada]="apenasGuardado()">
         <div class="campo campo--data">
           <label class="rotulo" [for]="ids.data">Data</label>
           <input class="input" type="date" [id]="ids.data" formControlName="data" />
@@ -93,7 +94,7 @@
           <input
             class="input"
             type="text"
-            placeholder="Ex.: Mercadona"
+            [placeholder]="apenasGuardado() ? 'Ex.: Reserva' : 'Ex.: Mercadona'"
             maxlength="80"
             autocomplete="off"
             [id]="ids.descricao"
@@ -123,7 +124,7 @@
           Cancelar
         </button>
         <button type="submit" class="btn-primario salvar" [disabled]="!valido() || ocupado()">
-          Salvar
+          {{ apenasGuardado() ? 'Guardar' : 'Salvar' }}
         </button>
       </div>
     </form>

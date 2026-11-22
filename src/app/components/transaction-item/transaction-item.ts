@@ -1,5 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 
+import { formatarDataCurta } from '../../core/utils/data';
 import { Categoria } from '../../interface/categoria.interface';
 import { Transacao } from '../../interface/transacao.interface';
 import { CategoryIcon } from '../category-icon/category-icon';
@@ -24,6 +25,10 @@ export class TransactionItem {
   readonly transacao = input.required<Transacao>();
   /** Categoria da transação (ignorada quando o tipo é GUARDADO). */
   readonly categoria = input<Categoria | undefined>();
+  /** O que mostrar abaixo da descrição: nome da categoria ou data (dd/MM/yyyy). */
+  readonly subtitulo = input<'categoria' | 'data'>('categoria');
+  /** false: valor sem sinal e na cor do texto (ex.: tela Guardado). */
+  readonly mostrarSinal = input(true);
 
   protected readonly visual = computed(() => {
     const t = this.transacao();
@@ -38,5 +43,12 @@ export class TransactionItem {
     };
   });
 
-  protected readonly sinal = computed(() => (this.transacao().tipo === 'ENTRADA' ? '+' : '−'));
+  protected readonly textoSubtitulo = computed(() =>
+    this.subtitulo() === 'data' ? formatarDataCurta(this.transacao().data) : this.visual().nome,
+  );
+
+  protected readonly sinal = computed(() => {
+    if (!this.mostrarSinal()) return '';
+    return this.transacao().tipo === 'ENTRADA' ? '+' : '−';
+  });
 }

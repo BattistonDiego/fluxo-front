@@ -1,0 +1,84 @@
+:host {
+  display: block;
+}
+
+.grafico {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  height: 240px;
+}
+
+.coluna {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-btn-lg);
+  background: transparent;
+  color: var(--muted);
+}
+
+div.coluna {
+  // Skeleton: reserva o espaço do rótulo embaixo, como nas barras reais.
+  padding-bottom: 30px;
+}
+
+.valor {
+  font-family: var(--num);
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.barra {
+  display: block;
+  width: 100%;
+  max-width: 88px;
+  border-radius: 14px;
+  background: #2a2540;
+  transition: height 0.3s ease, background-color 0.2s ease;
+}
+
+.rotulo {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+button.coluna:hover:not(.selecionada) .barra {
+  background: #363052;
+}
+
+.selecionada {
+  color: var(--text);
+
+  .barra {
+    background: #6d4aff;
+  }
+
+  .rotulo {
+    font-weight: 700;
+  }
+}
+
+@media (max-width: 600px) {
+  .grafico {
+    gap: 8px;
+  }
+
+  .valor {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barra {
+    transition: none;
+  }
+}

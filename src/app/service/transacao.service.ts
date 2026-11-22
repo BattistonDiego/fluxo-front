@@ -8,7 +8,7 @@ import { TRANSACOES_MOCK } from '../core/mocks/transacoes.mock';
 import { mesAtual } from '../core/utils/mes';
 import { GuardadoMensal } from '../interface/guardado-mensal.interface';
 import { GastoPorCategoria, ResumoMensal } from '../interface/resumo-mensal.interface';
-import { NovaTransacao, Transacao } from '../interface/transacao.interface';
+import { NovaTransacao, TipoTransacao, Transacao } from '../interface/transacao.interface';
 
 const MOCK_DELAY_MS = 300;
 
@@ -31,13 +31,17 @@ export class TransacaoService {
    */
   readonly versao = this._versao.asReadonly();
 
-  // TODO backend: GET /api/transacoes?mes=2026-11
-  listarPorMes(mes: string): Observable<Transacao[]> {
+  // TODO backend: GET /api/transacoes?mes=2026-11&tipo=GUARDADO
+  /** Transações do mês (mais recentes primeiro), opcionalmente só de um tipo. */
+  listarPorMes(mes: string, tipo?: TipoTransacao): Observable<Transacao[]> {
     if (!environment.useMock) {
-      return this.http.get<Transacao[]>(this.baseUrl, { params: { mes } });
+      return this.http.get<Transacao[]>(this.baseUrl, {
+        params: tipo ? { mes, tipo } : { mes },
+      });
     }
     return this.mock(() =>
       this.doMes(mes)
+        .filter((t) => !tipo || t.tipo === tipo)
         .sort((a, b) => b.data.localeCompare(a.data) || b.id - a.id)
         .map((t) => ({ ...t })),
     );
@@ -97,6 +101,15 @@ export class TransacaoService {
       const datas = this.transacoes().map((t) => t.data);
       return datas.length ? datas.reduce((min, d) => (d < min ? d : min)).slice(0, 7) : null;
     });
+  }
+
+  /** Soma de todos os guardados (acumulado de todos os meses). */
+  // TODO backend: GET /api/guardado/total
+  getTotalGuardado(): Observable<number> {
+    if (!environment.useMock) {
+      return this.http.get<number>(`${environment.apiUrl}/guardado/total`);
+    }
+    return this.mock(() => soma(this.transacoes().filter((t) => t.tipo === 'GUARDADO')));
   }
 
   /** Total guardado em cada um dos últimos N meses (do mais antigo ao atual). */

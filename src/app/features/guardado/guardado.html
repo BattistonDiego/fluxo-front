@@ -1,1 +1,100 @@
-<h1>Guardado</h1>
+<div class="pagina">
+  <!-- 1. Header -->
+  <header class="cabecalho">
+    <h1 class="titulo">Guardado</h1>
+    <button type="button" class="btn-primario" (click)="abrirNovo()">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+           stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+        <path d="M12 5v14" />
+        <path d="M5 12h14" />
+      </svg>
+      Guardar dinheiro
+    </button>
+  </header>
+
+  @if (erro()) {
+    <div class="erro-card" role="alert">
+      <p>Não foi possível carregar os dados do guardado.</p>
+      <button type="button" class="erro-card__btn" (click)="tentarNovamente()">Tentar novamente</button>
+    </div>
+  } @else {
+    <!-- 2. Topo -->
+    <div class="topo">
+      <section class="total" [attr.aria-busy]="total() === undefined">
+        <p class="total__label">Total guardado</p>
+        @if (total() !== undefined) {
+          <p class="total__valor">{{ total() | moeda }}</p>
+        } @else {
+          <span class="total__skeleton skeleton"></span>
+        }
+      </section>
+
+      <app-stat-card
+        variante="accent"
+        icone="cofrinho"
+        [label]="nomeMesSemAno()"
+        [valor]="totalDoMes()"
+        [carregando]="totalDoMes() === undefined"
+      />
+    </div>
+
+    <!-- 3. Mês a mês -->
+    <section class="secao" aria-labelledby="titulo-mes-a-mes">
+      <h2 id="titulo-mes-a-mes" class="secao__titulo">Mês a mês</h2>
+
+      <app-bar-chart
+        [itens]="barras()"
+        [selecionado]="seletor.selecionado()"
+        [carregando]="!barras().length"
+        (selecionar)="seletor.irPara($event)"
+      />
+
+      <div class="registros">
+        <div class="registros__cabecalho">
+          <h3 class="registros__titulo">{{ nomeMesSelecionado() }}</h3>
+          @if (totalDoMes() !== undefined) {
+            <span class="registros__total">{{ totalDoMes() | moeda }}</span>
+          }
+        </div>
+
+        @if (registros(); as lista) {
+          @for (t of lista; track t.id) {
+            <button
+              app-transaction-item
+              subtitulo="data"
+              [mostrarSinal]="false"
+              [transacao]="t"
+              (click)="abrirEdicao(t)"
+            ></button>
+          } @empty {
+            <p class="vazio">Nada guardado neste mês.</p>
+          }
+        } @else {
+          <div aria-busy="true" aria-label="Carregando registros">
+            @for (i of placeholders; track i) {
+              <div class="linha-skeleton">
+                <span class="skeleton linha-skeleton__icone"></span>
+                <span class="linha-skeleton__texto">
+                  <span class="skeleton linha-skeleton__l1"></span>
+                  <span class="skeleton linha-skeleton__l2"></span>
+                </span>
+                <span class="skeleton linha-skeleton__valor"></span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </section>
+  }
+</div>
+
+@if (modal(); as m) {
+  <app-transacao-modal
+    [transacao]="m.transacao"
+    [tiposPermitidos]="tiposPermitidos"
+    tipoInicial="GUARDADO"
+    (salvo)="fecharModal()"
+    (excluido)="fecharModal()"
+    (fechado)="fecharModal()"
+  />
+}

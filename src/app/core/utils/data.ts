@@ -25,6 +25,12 @@ export function somarDias(iso: string, dias: number): string {
   return paraIso(d);
 }
 
+/** Data curta. Ex: '2026-11-20' → '20/11/2026'. */
+export function formatarDataCurta(iso: string): string {
+  const [ano, mes, dia] = iso.split('-');
+  return `${dia}/${mes}/${ano}`;
+}
+
 /**
  * Rótulo amigável de um dia: "Hoje", "Ontem" ou "Sexta, 20 de novembro"
  * (com o ano no final quando não for o ano corrente).

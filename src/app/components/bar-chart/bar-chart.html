@@ -1,0 +1,26 @@
+@if (carregando()) {
+  <div class="grafico" aria-busy="true" aria-label="Carregando gráfico">
+    @for (altura of alturasSkeleton; track $index) {
+      <div class="coluna">
+        <span class="barra skeleton" [style.height.px]="altura"></span>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="grafico" role="group" [attr.aria-label]="ariaLabel()">
+    @for (b of barras(); track b.id) {
+      <button
+        type="button"
+        class="coluna"
+        [class.selecionada]="b.id === selecionado()"
+        [attr.aria-pressed]="b.id === selecionado()"
+        [attr.aria-label]="b.ariaLabel"
+        (click)="selecionar.emit(b.id)"
+      >
+        <span class="valor" aria-hidden="true">{{ b.valorFormatado }}</span>
+        <span class="barra" [style.height.px]="b.altura"></span>
+        <span class="rotulo" aria-hidden="true">{{ b.rotulo }}</span>
+      </button>
+    }
+  </div>
+}

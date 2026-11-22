@@ -4,9 +4,7 @@
 
 <span class="texto">
   <span class="descricao">{{ transacao().descricao }}</span>
-  <span class="categoria">{{ visual().nome }}</span>
+  <span class="subtitulo">{{ textoSubtitulo() }}</span>
 </span>
 
-<span class="valor" [attr.data-tipo]="transacao().tipo">
-  {{ sinal() }}{{ transacao().valor | moeda }}
-</span>
+<span class="valor" [attr.data-tipo]="mostrarSinal() ? transacao().tipo : null">{{ sinal() }}{{ transacao().valor | moeda }}</span>

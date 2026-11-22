@@ -126,6 +126,12 @@ export class TransacaoModal implements OnInit {
     TIPOS.filter((t) => this.tiposPermitidos().includes(t.tipo)),
   );
 
+  /** Modo compacto da tela Guardado: só o tipo GUARDADO é permitido. */
+  protected readonly apenasGuardado = computed(() => {
+    const tipos = this.tiposPermitidos();
+    return tipos.length === 1 && tipos[0] === 'GUARDADO';
+  });
+
   protected readonly editando = computed(() => !!this.transacao());
 
   protected readonly titulo = computed(() => {

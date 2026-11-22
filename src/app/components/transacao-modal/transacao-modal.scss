@@ -26,6 +26,10 @@
   background: var(--surface);
   animation: subir 0.18s ease-out;
 
+  &--compacta {
+    width: min(440px, 100%);
+  }
+
   @media (max-width: 600px) {
     padding: 24px 20px;
   }
@@ -237,6 +241,14 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+
+  &--empilhada {
+    flex-direction: column;
+
+    .campo {
+      flex: none;
+    }
+  }
 }
 
 .campo--data {
