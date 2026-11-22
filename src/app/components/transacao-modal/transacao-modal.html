@@ -1,0 +1,131 @@
+<div class="overlay" (mousedown)="aoPressionarOverlay($event)" (click)="aoClicarOverlay($event)">
+  <div
+    #caixa
+    class="caixa"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="ids.titulo"
+  >
+    <header class="cabecalho">
+      <h2 class="titulo" [id]="ids.titulo">{{ titulo() }}</h2>
+      <button type="button" class="fechar" aria-label="Fechar" (click)="fechar()">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M18 6 6 18" />
+          <path d="m6 6 12 12" />
+        </svg>
+      </button>
+    </header>
+
+    <form class="form" [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+      @if (tiposVisiveis().length > 1) {
+        <div class="tipos" role="group" aria-label="Tipo de transação">
+          @for (t of tiposVisiveis(); track t.tipo) {
+            <button
+              type="button"
+              class="tipo"
+              [attr.data-tipo]="t.tipo"
+              [attr.aria-pressed]="tipo() === t.tipo"
+              (click)="selecionarTipo(t.tipo)"
+            >
+              {{ t.label }}
+            </button>
+          }
+        </div>
+      }
+
+      <div class="valor">
+        <label class="rotulo" [for]="ids.valor">Valor</label>
+        <div class="valor__linha">
+          <input
+            #campoValor
+            class="valor__input"
+            type="text"
+            inputmode="decimal"
+            autocomplete="off"
+            placeholder="0,00"
+            [id]="ids.valor"
+            formControlName="valor"
+            (input)="sanitizarValor()"
+          />
+          <span class="valor__moeda" aria-hidden="true">€</span>
+        </div>
+      </div>
+
+      @if (tipo() !== 'GUARDADO') {
+        <div class="campo">
+          <span class="rotulo" [id]="ids.categoria">Categoria</span>
+          <div class="chips" role="group" [attr.aria-labelledby]="ids.categoria">
+            @for (c of categoriasDoTipo(); track c.id) {
+              <button
+                type="button"
+                class="chip"
+                [class.ativo]="categoriaSelecionada() === c.id"
+                [attr.aria-pressed]="categoriaSelecionada() === c.id"
+                [style.--cor]="c.cor"
+                (click)="selecionarCategoria(c.id)"
+              >
+                <span class="chip__icone">
+                  <app-category-icon [nome]="c.icone" [tamanho]="14" />
+                </span>
+                {{ c.nome }}
+              </button>
+            } @empty {
+              @if (carregandoCategorias()) {
+                @for (i of [1, 2, 3]; track i) {
+                  <span class="chip chip--skeleton skeleton"></span>
+                }
+              }
+            }
+          </div>
+        </div>
+      }
+
+      <div class="linha">
+        <div class="campo campo--data">
+          <label class="rotulo" [for]="ids.data">Data</label>
+          <input class="input" type="date" [id]="ids.data" formControlName="data" />
+        </div>
+        <div class="campo campo--descricao">
+          <label class="rotulo" [for]="ids.descricao">
+            {{ tipo() === 'GUARDADO' ? 'Descrição (opcional)' : 'Descrição' }}
+          </label>
+          <input
+            class="input"
+            type="text"
+            placeholder="Ex.: Mercadona"
+            maxlength="80"
+            autocomplete="off"
+            [id]="ids.descricao"
+            formControlName="descricao"
+          />
+        </div>
+      </div>
+
+      @if (erro()) {
+        <p class="erro" role="alert">{{ erro() }}</p>
+      }
+
+      <div class="rodape">
+        @if (editando()) {
+          <button
+            type="button"
+            class="excluir"
+            [disabled]="ocupado()"
+            (click)="excluir()"
+            (blur)="confirmandoExclusao.set(false)"
+          >
+            {{ confirmandoExclusao() ? 'Confirmar exclusão' : 'Excluir' }}
+          </button>
+        }
+        <span class="espaco"></span>
+        <button type="button" class="cancelar" [disabled]="ocupado()" (click)="fechar()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn-primario salvar" [disabled]="!valido() || ocupado()">
+          Salvar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

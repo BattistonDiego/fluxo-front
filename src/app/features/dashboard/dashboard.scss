@@ -1,3 +1,193 @@
 :host {
   display: block;
 }
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+// ───────────── 1. Header ─────────────
+
+.topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.mes {
+  display: flex;
+  align-items: center;
+
+  &__btn {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--r-btn);
+    background: transparent;
+    color: var(--text);
+    transition: background-color 0.15s ease, opacity 0.15s ease;
+
+    &:hover:not(:disabled) {
+      background: var(--surface2);
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+  }
+
+  &__titulo {
+    min-width: 210px;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-align: center;
+  }
+}
+
+// ───────────── 2. Saldo ─────────────
+
+.saldo {
+  &__label {
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  &__valor {
+    margin-top: 10px;
+    font-family: var(--num);
+    font-size: 88px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+
+  &__skeleton {
+    display: block;
+    width: 340px;
+    max-width: 100%;
+    height: 88px;
+    margin-top: 10px;
+    border-radius: 16px;
+  }
+
+  @media (max-width: 600px) {
+    &__valor {
+      font-size: 56px;
+    }
+
+    &__skeleton {
+      height: 56px;
+    }
+  }
+}
+
+// ───────────── 3. Cards ─────────────
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+// ───────────── 4. Gastos por categoria ─────────────
+
+.categorias {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 36px;
+  border-radius: var(--r-section);
+  background: var(--surface);
+
+  &__titulo {
+    font-family: var(--font);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+
+  &__corpo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 56px;
+  }
+
+  @media (max-width: 600px) {
+    padding: 24px;
+  }
+}
+
+.donut-skeleton {
+  flex: 0 0 260px;
+  width: 260px;
+  height: 260px;
+  border: 28.6px solid var(--surface2); // stroke 22 no viewBox 200 → 28.6px em 260px
+  border-radius: 50%;
+  background: transparent;
+}
+
+.legenda {
+  flex: 1 1 320px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 11px 0;
+  }
+
+  &__cor {
+    flex: 0 0 10px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  &__nome {
+    flex: 1;
+    min-width: 0;
+    font-size: 15px;
+  }
+
+  &__pct {
+    width: 56px;
+    font-size: 14px;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  &__valor {
+    width: 110px;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  &__skeleton {
+    width: 100%;
+    height: 19px;
+  }
+}
+
+.vazio {
+  padding: 48px 0;
+  color: var(--muted);
+  text-align: center;
+}

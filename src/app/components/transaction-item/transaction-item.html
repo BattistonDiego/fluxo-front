@@ -1,0 +1,12 @@
+<span class="icone">
+  <app-category-icon [nome]="visual().icone" [tamanho]="20" />
+</span>
+
+<span class="texto">
+  <span class="descricao">{{ transacao().descricao }}</span>
+  <span class="categoria">{{ visual().nome }}</span>
+</span>
+
+<span class="valor" [attr.data-tipo]="transacao().tipo">
+  {{ sinal() }}{{ transacao().valor | moeda }}
+</span>

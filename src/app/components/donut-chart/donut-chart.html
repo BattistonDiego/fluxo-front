@@ -1,0 +1,21 @@
+<svg viewBox="0 0 200 200" width="260" height="260" role="img" [attr.aria-label]="ariaLabel()">
+  <g transform="rotate(-90 100 100)">
+    @for (s of segmentos(); track s.label) {
+      <circle
+        cx="100"
+        cy="100"
+        [attr.r]="raio"
+        fill="none"
+        stroke-width="22"
+        [attr.stroke]="s.cor"
+        [attr.stroke-dasharray]="s.dasharray"
+        [attr.stroke-dashoffset]="s.dashoffset"
+      />
+    }
+  </g>
+</svg>
+
+<div class="centro" aria-hidden="true">
+  <span class="centro__label">{{ rotuloTotal() }}</span>
+  <span class="centro__valor">{{ valorTotal() | moeda }}</span>
+</div>

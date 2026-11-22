@@ -1,0 +1,35 @@
+:host {
+  position: relative;
+  display: block;
+  flex: 0 0 260px;
+  width: 260px;
+  height: 260px;
+}
+
+svg {
+  display: block;
+}
+
+.centro {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+
+  &__label {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  &__valor {
+    font-family: var(--num);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+  }
+}

@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { defer, delay, Observable, of } from 'rxjs';
+import { defer, delay, MonoTypeOperatorFunction, Observable, of, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { CATEGORIAS_MOCK } from '../core/mocks/categorias.mock';
 import { TRANSACOES_MOCK } from '../core/mocks/transacoes.mock';
+import { mesAtual } from '../core/utils/mes';
 import { GuardadoMensal } from '../interface/guardado-mensal.interface';
 import { GastoPorCategoria, ResumoMensal } from '../interface/resumo-mensal.interface';
 import { NovaTransacao, Transacao } from '../interface/transacao.interface';
@@ -22,6 +23,14 @@ export class TransacaoService {
    */
   private readonly transacoes = signal<Transacao[]>(TRANSACOES_MOCK.map((t) => ({ ...t })));
 
+  private readonly _versao = signal(0);
+
+  /**
+   * Incrementa a cada criação/edição/exclusão bem-sucedida.
+   * As telas incluem esse sinal nos params dos seus resources para recarregar os dados.
+   */
+  readonly versao = this._versao.asReadonly();
+
   // TODO backend: GET /api/transacoes?mes=2026-11
   listarPorMes(mes: string): Observable<Transacao[]> {
     if (!environment.useMock) {
@@ -36,38 +45,38 @@ export class TransacaoService {
 
   // TODO backend: POST /api/transacoes
   criar(t: NovaTransacao): Observable<Transacao> {
-    if (!environment.useMock) {
-      return this.http.post<Transacao>(this.baseUrl, t);
-    }
-    return this.mock(() => {
-      const nova: Transacao = { ...t, id: this.proximoId() };
-      this.transacoes.update((lista) => [...lista, nova]);
-      return { ...nova };
-    });
+    const req = !environment.useMock
+      ? this.http.post<Transacao>(this.baseUrl, t)
+      : this.mock(() => {
+          const nova: Transacao = { ...t, id: this.proximoId() };
+          this.transacoes.update((lista) => [...lista, nova]);
+          return { ...nova };
+        });
+    return req.pipe(this.notificarMudanca());
   }
 
   // TODO backend: PUT /api/transacoes/{id}
   atualizar(t: Transacao): Observable<Transacao> {
-    if (!environment.useMock) {
-      return this.http.put<Transacao>(`${this.baseUrl}/${t.id}`, t);
-    }
-    return this.mock(() => {
-      if (!this.transacoes().some((x) => x.id === t.id)) {
-        throw new Error(`Transação ${t.id} não encontrada`);
-      }
-      this.transacoes.update((lista) => lista.map((x) => (x.id === t.id ? { ...t } : x)));
-      return { ...t };
-    });
+    const req = !environment.useMock
+      ? this.http.put<Transacao>(`${this.baseUrl}/${t.id}`, t)
+      : this.mock(() => {
+          if (!this.transacoes().some((x) => x.id === t.id)) {
+            throw new Error(`Transação ${t.id} não encontrada`);
+          }
+          this.transacoes.update((lista) => lista.map((x) => (x.id === t.id ? { ...t } : x)));
+          return { ...t };
+        });
+    return req.pipe(this.notificarMudanca());
   }
 
   // TODO backend: DELETE /api/transacoes/{id}
   excluir(id: number): Observable<void> {
-    if (!environment.useMock) {
-      return this.http.delete<void>(`${this.baseUrl}/${id}`);
-    }
-    return this.mock(() => {
-      this.transacoes.update((lista) => lista.filter((x) => x.id !== id));
-    });
+    const req = !environment.useMock
+      ? this.http.delete<void>(`${this.baseUrl}/${id}`)
+      : this.mock(() => {
+          this.transacoes.update((lista) => lista.filter((x) => x.id !== id));
+        });
+    return req.pipe(this.notificarMudanca());
   }
 
   // TODO backend: GET /api/transacoes/resumo?mes=2026-11
@@ -76,6 +85,18 @@ export class TransacaoService {
       return this.http.get<ResumoMensal>(`${this.baseUrl}/resumo`, { params: { mes } });
     }
     return this.mock(() => this.calcularResumo(mes));
+  }
+
+  /** Mês (yyyy-MM) da transação mais antiga, ou null se ainda não houver transações. */
+  // TODO backend: GET /api/transacoes/primeiro-mes
+  getPrimeiroMes(): Observable<string | null> {
+    if (!environment.useMock) {
+      return this.http.get<string | null>(`${this.baseUrl}/primeiro-mes`);
+    }
+    return this.mock(() => {
+      const datas = this.transacoes().map((t) => t.data);
+      return datas.length ? datas.reduce((min, d) => (d < min ? d : min)).slice(0, 7) : null;
+    });
   }
 
   /** Total guardado em cada um dos últimos N meses (do mais antigo ao atual). */
@@ -92,6 +113,11 @@ export class TransacaoService {
         valor: soma(this.doMes(mes).filter((t) => t.tipo === 'GUARDADO')),
       })),
     );
+  }
+
+  /** Avisa as telas (via `versao`) que os dados mudaram. */
+  private notificarMudanca<T>(): MonoTypeOperatorFunction<T> {
+    return tap(() => this._versao.update((v) => v + 1));
   }
 
   // ───────────────────────── helpers do mock ─────────────────────────
@@ -151,12 +177,6 @@ function arred(v: number): number {
 
 function soma(lista: Transacao[]): number {
   return arred(lista.reduce((acc, t) => acc + t.valor, 0));
-}
-
-/** Mês atual no formato yyyy-MM. */
-function mesAtual(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
 }
 
 /** Lista os N meses que terminam em `mes` (inclusive), do mais antigo ao mais recente. */

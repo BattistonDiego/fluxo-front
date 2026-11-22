@@ -1,1 +1,122 @@
-<h1>Dashboard</h1>
+<div class="dashboard">
+  <!-- 1. Header -->
+  <header class="topo">
+    <div class="mes">
+      <button
+        type="button"
+        class="mes__btn"
+        aria-label="Mês anterior"
+        [disabled]="!seletor.podeVoltar()"
+        (click)="seletor.navegar(-1)"
+      >
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+      </button>
+
+      <h1 class="mes__titulo" aria-live="polite">{{ titulo() }}</h1>
+
+      <button
+        type="button"
+        class="mes__btn"
+        aria-label="Próximo mês"
+        [disabled]="!seletor.podeAvancar()"
+        (click)="seletor.navegar(1)"
+      >
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m9 18 6-6-6-6" />
+        </svg>
+      </button>
+    </div>
+
+    <a class="btn-primario" routerLink="/transacoes" [queryParams]="{ novo: 1 }">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+           stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+        <path d="M12 5v14" />
+        <path d="M5 12h14" />
+      </svg>
+      Adicionar transação
+    </a>
+  </header>
+
+  @if (resumo.error()) {
+    <div class="erro-card" role="alert">
+      <p>Não foi possível carregar o resumo deste mês.</p>
+      <button type="button" class="erro-card__btn" (click)="resumo.reload()">Tentar novamente</button>
+    </div>
+  } @else {
+    <!-- 2. Saldo disponível -->
+    <section class="saldo" [attr.aria-busy]="!dados()">
+      <p class="saldo__label">Saldo disponível</p>
+      @if (dados()) {
+        <p class="saldo__valor">{{ saldo().negativo ? '−' : '' }}{{ saldo().valor | moeda }}</p>
+      } @else {
+        <span class="saldo__skeleton skeleton"></span>
+      }
+    </section>
+
+    <!-- 3. Cards -->
+    <div class="cards">
+      <app-stat-card
+        label="Entradas"
+        variante="in"
+        icone="seta-baixo"
+        [valor]="dados()?.entradas"
+        [carregando]="!dados()"
+      />
+      <app-stat-card
+        label="Gastos"
+        variante="out"
+        icone="seta-cima"
+        [valor]="dados()?.gastos"
+        [carregando]="!dados()"
+      />
+      <app-stat-card
+        label="Guardado no mês"
+        variante="accent"
+        icone="cofrinho"
+        [valor]="dados()?.guardado"
+        [carregando]="!dados()"
+      />
+    </div>
+
+    <!-- 4. Gastos por categoria -->
+    <section class="categorias" aria-labelledby="titulo-categorias">
+      <h2 id="titulo-categorias" class="categorias__titulo">Gastos por categoria</h2>
+
+      @if (dados(); as d) {
+        @if (categorias().length) {
+          <div class="categorias__corpo">
+            <app-donut-chart [fatias]="fatias()" [total]="d.gastos" />
+
+            <ul class="legenda">
+              @for (g of categorias(); track g.categoria.id) {
+                <li class="legenda__item">
+                  <span class="legenda__cor" [style.background]="g.categoria.cor" aria-hidden="true"></span>
+                  <span class="legenda__nome">{{ g.categoria.nome }}</span>
+                  <span class="legenda__pct">{{ g.percentual | number: '1.0-0' }}%</span>
+                  <span class="legenda__valor">{{ g.valor | moeda }}</span>
+                </li>
+              }
+            </ul>
+          </div>
+        } @else {
+          <p class="vazio">Nenhum gasto neste mês.</p>
+        }
+      } @else {
+        <div class="categorias__corpo" aria-busy="true">
+          <span class="donut-skeleton skeleton"></span>
+          <ul class="legenda" aria-hidden="true">
+            @for (i of placeholdersLegenda; track i) {
+              <li class="legenda__item">
+                <span class="legenda__skeleton skeleton"></span>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+    </section>
+  }
+</div>

@@ -1,3 +1,185 @@
 :host {
   display: block;
 }
+
+.pagina {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+// ───────────── Header ─────────────
+
+.topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.titulo {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+// ───────────── Busca e filtro ─────────────
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.campo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  border-radius: var(--r-btn-lg);
+  background: var(--surface);
+
+  &:focus-within {
+    outline: 2px solid var(--accent-text);
+    outline-offset: 2px;
+  }
+
+  input,
+  select {
+    outline: 0;
+  }
+}
+
+.busca {
+  flex: 1 1 320px;
+  gap: 10px;
+  padding: 0 16px;
+
+  &__icone {
+    flex: 0 0 18px;
+    color: var(--muted);
+  }
+
+  &__input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-size: 15px;
+
+    &::placeholder {
+      color: var(--muted);
+    }
+  }
+}
+
+.mes {
+  &__select {
+    height: 100%;
+    padding: 0 42px 0 18px;
+    border: 0;
+    border-radius: inherit;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 600;
+    appearance: none;
+    cursor: pointer;
+    color-scheme: dark;
+
+    option {
+      background: var(--surface);
+    }
+  }
+
+  &__seta {
+    position: absolute;
+    right: 16px;
+    pointer-events: none;
+  }
+}
+
+// ───────────── Lista ─────────────
+
+.grupos {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &__cabecalho {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 12px 8px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--muted);
+  }
+
+  &__total {
+    white-space: nowrap;
+  }
+}
+
+.vazio {
+  margin: 40px 0;
+  font-size: 15px;
+  color: var(--muted);
+  text-align: center;
+}
+
+// ───────────── Loading ─────────────
+
+.carregando {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 27px; // alinha com a altura do cabeçalho de grupo
+}
+
+.linha-skeleton {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+
+  &__icone {
+    flex: 0 0 44px;
+    height: 44px;
+    border-radius: 14px;
+  }
+
+  &__texto {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__l1 {
+    width: 40%;
+    height: 15px;
+  }
+
+  &__l2 {
+    width: 22%;
+    height: 12px;
+  }
+
+  &__valor {
+    width: 80px;
+    height: 16px;
+  }
+}

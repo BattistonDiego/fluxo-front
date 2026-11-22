@@ -146,3 +146,75 @@ button {
   white-space: nowrap;
   border: 0;
 }
+
+/* Botão primário (ação principal das telas) */
+.btn-primario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: var(--r-btn);
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: filter 0.15s ease, opacity 0.15s ease;
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.1);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+/* Card de erro com "Tentar novamente" */
+.erro-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px 28px;
+  border-radius: var(--r-card);
+  background: var(--out-soft);
+  color: var(--out);
+
+  &__btn {
+    height: 40px;
+    padding: 0 16px;
+    border: 1px solid currentColor;
+    border-radius: var(--r-btn);
+    background: transparent;
+    font-weight: 600;
+  }
+}
+
+/* Skeleton de carregamento */
+.skeleton {
+  background: var(--surface2);
+  border-radius: 8px;
+  animation: skeleton-pulsar 1.4s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulsar {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}

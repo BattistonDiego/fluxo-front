@@ -1,0 +1,29 @@
+<span class="icone" aria-hidden="true">
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
+       stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    @switch (icone()) {
+      @case ('seta-baixo') {
+        <path d="M12 5v14" />
+        <path d="m19 12-7 7-7-7" />
+      }
+      @case ('seta-cima') {
+        <path d="M12 19V5" />
+        <path d="m5 12 7-7 7 7" />
+      }
+      @case ('cofrinho') {
+        <path d="M19 9.5c0-3-3.1-5.5-7-5.5S5 6.5 5 9.5c0 1.4.6 2.6 1.6 3.6L6 18h3l.7-2h4.6l.7 2h3l-.6-4.9c1-1 1.6-2.2 1.6-3.6Z" />
+        <path d="M9.5 8h5" />
+        <path d="M19 9.5h1.5" />
+      }
+    }
+  </svg>
+</span>
+
+<div class="texto">
+  <p class="label">{{ label() }}</p>
+  @if (carregando()) {
+    <span class="valor-skeleton skeleton"></span>
+  } @else {
+    <p class="valor">{{ valor() | moeda }}</p>
+  }
+</div>
